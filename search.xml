@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>CS61B | gitlet</title>
-    <url>/myblogs/2025/07/21/CS61B-gitlet/</url>
+    <url>/2025/07/21/CS61B-gitlet/</url>
     <content><![CDATA[<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">所有的版本控制,</span><br><span class="line">其实就是管理「文件路径 → 内容哈希」的映射表随时间的演变。</span><br></pre></td></tr></table></figure>
 
 <h1 id="核心类"><a href="#核心类" class="headerlink" title="核心类"></a>核心类</h1><h2 id="Commit-java"><a href="#Commit-java" class="headerlink" title="Commit.java"></a>Commit.java</h2><ul>
