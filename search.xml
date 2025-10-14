@@ -551,5 +551,24 @@
 <h4 id="注意：兼容性"><a href="#注意：兼容性" class="headerlink" title="注意：兼容性"></a>注意：兼容性</h4><p>两种写法的功能完全一致（排序逻辑和打印结果相同）。<code>List.sort()</code> 和 <code>forEach</code> 是Java 8引入的特性，若项目需要兼容Java 7及以下版本，则需保留原写法。但目前绝大多数工程已使用Java 8+，因此这种修改是更优的选择。</p>
 <p>总结：这种修改不影响功能，却让代码更简洁、符合现代Java风格，在工程实践中更推荐。</p>
 ]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>这是一个测试文章</title>
+    <url>/2025/10/15/test-post/</url>
+    <content><![CDATA[<p>这是文章的正文内容。</p>
+]]></content>
+      <categories>
+        <category>测试分类</category>
+      </categories>
+      <tags>
+        <tag>测试标签</tag>
+      </tags>
   </entry>
 </search>
