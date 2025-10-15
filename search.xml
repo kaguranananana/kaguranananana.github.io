@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>这是一个测试文章</title>
+    <url>/posts/521a234c/</url>
+    <content><![CDATA[<p>这是文章的正文内容。</p>
+]]></content>
+      <categories>
+        <category>测试分类</category>
+      </categories>
+      <tags>
+        <tag>测试标签</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>CS61B | gitlet</title>
     <url>/posts/d8e1a81/</url>
     <content><![CDATA[<h1 id="核心类"><a href="#核心类" class="headerlink" title="核心类"></a>核心类</h1><h2 id="Commit-java"><a href="#Commit-java" class="headerlink" title="Commit.java"></a>Commit.java</h2><ul>
@@ -486,18 +498,6 @@
       <tags>
         <tag>java</tag>
         <tag>学习笔记</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>这是一个测试文章</title>
-    <url>/posts/521a234c/</url>
-    <content><![CDATA[<p>这是文章的正文内容。</p>
-]]></content>
-      <categories>
-        <category>测试分类</category>
-      </categories>
-      <tags>
-        <tag>测试标签</tag>
       </tags>
   </entry>
 </search>
