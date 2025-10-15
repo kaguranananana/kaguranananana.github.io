@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>CS61B | gitlet</title>
-    <url>/2025/07/21/CS61B-gitlet/</url>
+    <url>/posts/d8e1a81/</url>
     <content><![CDATA[<h1 id="核心类"><a href="#核心类" class="headerlink" title="核心类"></a>核心类</h1><h2 id="Commit-java"><a href="#Commit-java" class="headerlink" title="Commit.java"></a>Commit.java</h2><ul>
 <li><strong>功能</strong>： 记录一次提交的元数据和状态</li>
 <li><strong>字段</strong>：<ul>
@@ -561,7 +561,7 @@
   </entry>
   <entry>
     <title>这是一个测试文章</title>
-    <url>/2025/10/15/test-post/</url>
+    <url>/posts/521a234c/</url>
     <content><![CDATA[<p>这是文章的正文内容。</p>
 ]]></content>
       <categories>
