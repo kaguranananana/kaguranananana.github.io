@@ -28,7 +28,7 @@
 <meta property="og:description" content="所有的版本控制,其实就是管理「文件路径 → 内容哈希」的映射表随时间的演变。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-07-20T17:04:00.000Z">
-<meta property="article:modified_time" content="2025-10-14T17:01:30.363Z">
+<meta property="article:modified_time" content="2025-10-15T08:42:15.219Z">
 <meta property="article:tag" content="java">
 <meta property="article:tag" content="学习笔记">
 <meta name="twitter:card" content="summary">
@@ -159,7 +159,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E7%B1%BB"><span class="nav-number">1.</span> <span class="nav-text">核心类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Commit-java"><span class="nav-number">1.1.</span> <span class="nav-text">Commit.java</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Blob-java"><span class="nav-number">1.2.</span> <span class="nav-text">Blob.java</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#StagingArea-java"><span class="nav-number">1.3.</span> <span class="nav-text">StagingArea.java</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Repository-java"><span class="nav-number">1.4.</span> <span class="nav-text">Repository.java</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#gitlet%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84"><span class="nav-number">1.4.1.</span> <span class="nav-text">.gitlet文件结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#init"><span class="nav-number">1.4.2.</span> <span class="nav-text">init()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#add-String-fileName"><span class="nav-number">1.4.3.</span> <span class="nav-text">add(String fileName)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#commit-String-message"><span class="nav-number">1.4.4.</span> <span class="nav-text">commit(String message)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rm-String-fileName"><span class="nav-number">1.4.5.</span> <span class="nav-text">rm(String fileName)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#log"><span class="nav-number">1.4.6.</span> <span class="nav-text">log()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#global-log"><span class="nav-number">1.4.7.</span> <span class="nav-text">global-log()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#find-String-message"><span class="nav-number">1.4.8.</span> <span class="nav-text">find(String message)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#status"><span class="nav-number">1.4.9.</span> <span class="nav-text">status()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#checkout"><span class="nav-number">1.4.10.</span> <span class="nav-text">checkout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#branch-String-branchName"><span class="nav-number">1.4.11.</span> <span class="nav-text">branch(String branchName)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rmBranch-String-branchName"><span class="nav-number">1.4.12.</span> <span class="nav-text">rmBranch(String branchName)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#reset-String-commitId"><span class="nav-number">1.4.13.</span> <span class="nav-text">reset(String commitId)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#merge-String-branchName"><span class="nav-number">1.4.14.</span> <span class="nav-text">merge(String branchName)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#debug%E7%9A%84%E5%9D%91%E7%82%B9%E5%92%8C%E4%B8%80%E4%BA%9B%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">2.</span> <span class="nav-text">debug的坑点和一些注意事项</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%8F%E8%AE%B0%EF%BC%88%E5%B7%B2%E5%8F%91%E5%B8%83qq%E7%A9%BA%E9%97%B4%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">小记（已发布qq空间）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A1%BA%E5%B8%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E4%B8%80%E4%BA%9Bjava%E8%AF%AD%E6%B3%95%EF%BC%88%E6%9D%A5%E6%BA%90gpt%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">顺带学习的一些java语法（来源gpt）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#java%E4%B8%AD%E5%AF%B9%E9%9B%86%E5%90%88%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%B0%81%E8%A3%85%E6%96%B9%E6%B3%95"><span class="nav-number">4.1.</span> <span class="nav-text">java中对集合对象的封装方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%F0%9F%94%B9-Collections-emptyList-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">4.1.1.</span> <span class="nav-text">🔹 Collections.emptyList() 是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%F0%9F%94%B9-Collections-unmodifiableList-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">4.1.2.</span> <span class="nav-text">🔹 Collections.unmodifiableList(...) 是什么？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E2%9C%85-%E4%B8%BE%E4%B8%AA%E4%BE%8B%E5%AD%90%EF%BC%9A"><span class="nav-number">4.1.2.1.</span> <span class="nav-text">✅ 举个例子：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#java%E4%B8%AD%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%9A%84%E4%B8%80%E4%BA%9B%E8%AF%AD%E6%B3%95"><span class="nav-number">4.2.</span> <span class="nav-text">java中函数式编程的一些语法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E5%8F%A5%EF%BC%9A"><span class="nav-number">4.2.0.1.</span> <span class="nav-text">第一句：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E5%8F%A5%EF%BC%9A"><span class="nav-number">4.2.0.2.</span> <span class="nav-text">第二句：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="nav-number">4.2.0.3.</span> <span class="nav-text">总结：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E4%BB%A3%E7%A0%81%E6%9B%B4%E7%AE%80%E6%B4%81%EF%BC%8C%E5%8F%AF%E8%AF%BB%E6%80%A7%E6%9B%B4%E5%BC%BA"><span class="nav-number">4.2.0.4.</span> <span class="nav-text">1. 代码更简洁，可读性更强</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E7%AC%A6%E5%90%88%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%92%8C%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3"><span class="nav-number">4.2.0.5.</span> <span class="nav-text">2. 符合面向对象和函数式编程思想</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E5%B7%A5%E7%A8%8B%E4%B8%8A%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7"><span class="nav-number">4.2.0.6.</span> <span class="nav-text">3. 工程上的一致性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%EF%BC%9A%E5%85%BC%E5%AE%B9%E6%80%A7"><span class="nav-number">4.2.0.7.</span> <span class="nav-text">注意：兼容性</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E7%B1%BB"><span class="nav-number">1.</span> <span class="nav-text">核心类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Commit-java"><span class="nav-number">1.1.</span> <span class="nav-text">Commit.java</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Blob-java"><span class="nav-number">1.2.</span> <span class="nav-text">Blob.java</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#StagingArea-java"><span class="nav-number">1.3.</span> <span class="nav-text">StagingArea.java</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Repository-java"><span class="nav-number">1.4.</span> <span class="nav-text">Repository.java</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#gitlet%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84"><span class="nav-number">1.4.1.</span> <span class="nav-text">.gitlet文件结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#init"><span class="nav-number">1.4.2.</span> <span class="nav-text">init()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#add-String-fileName"><span class="nav-number">1.4.3.</span> <span class="nav-text">add(String fileName)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#commit-String-message"><span class="nav-number">1.4.4.</span> <span class="nav-text">commit(String message)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rm-String-fileName"><span class="nav-number">1.4.5.</span> <span class="nav-text">rm(String fileName)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#log"><span class="nav-number">1.4.6.</span> <span class="nav-text">log()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#global-log"><span class="nav-number">1.4.7.</span> <span class="nav-text">global-log()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#find-String-message"><span class="nav-number">1.4.8.</span> <span class="nav-text">find(String message)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#status"><span class="nav-number">1.4.9.</span> <span class="nav-text">status()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#checkout"><span class="nav-number">1.4.10.</span> <span class="nav-text">checkout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#branch-String-branchName"><span class="nav-number">1.4.11.</span> <span class="nav-text">branch(String branchName)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rmBranch-String-branchName"><span class="nav-number">1.4.12.</span> <span class="nav-text">rmBranch(String branchName)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#reset-String-commitId"><span class="nav-number">1.4.13.</span> <span class="nav-text">reset(String commitId)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#merge-String-branchName"><span class="nav-number">1.4.14.</span> <span class="nav-text">merge(String branchName)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#debug%E7%9A%84%E5%9D%91%E7%82%B9%E5%92%8C%E4%B8%80%E4%BA%9B%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">2.</span> <span class="nav-text">debug的坑点和一些注意事项</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -251,7 +251,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-10-15 01:01:30" itemprop="dateModified" datetime="2025-10-15T01:01:30+08:00">2025-10-15</time>
+      <time title="修改时间：2025-10-15 16:42:15" itemprop="dateModified" datetime="2025-10-15T16:42:15+08:00">2025-10-15</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -270,14 +270,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>4.8k</span>
+      <span>3.2k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>17 分钟</span>
+      <span>12 分钟</span>
     </span>
 </div>
 
@@ -764,77 +764,6 @@
 <li>处理冲突文件的时候注意换行符，被删除的文件要进行特判</li>
 <li>待补充……</li>
 </ul>
-<h1 id="小记（已发布qq空间）"><a href="#小记（已发布qq空间）" class="headerlink" title="小记（已发布qq空间）"></a>小记（已发布qq空间）</h1><p>CS61B-sp21 proj2 gitlet完结总结：</p>
-<p>gitlet对我而言算是第一个真正意义上的项目了，其中除了一些远端功能还未实现（留着以后回顾项目的时候再完整做一遍），基本实现了git的一些简单功能，支持add,commit,checkout,merge等操作。通过这个项目能大概了解一下git的原理。</p>
-<p>从放假前的一个月就着手准备开始这个项目了，由于早先就听说本次项目体量之大，文档之难读，一直迟迟不敢开写，也不知道从何开始，就这样一直拖到了暑假（期末周害惨了我）。暑假里大概花了一整天的时间重新找了相关参考资料，从知乎，CSDN，b站上广泛搜索项目的入坑和避坑指南。接下来花了花了四整天的时间开始着手编写。这几天的睡眠及其不安稳，通常是写到十二点之后，想上床睡觉了，一闭眼脑子里就在想接下来那个功能该如何实现，到底是哪里又出现了bug，这里又怎么测试，于是又干脆起床继续写了，第三天直接写到了凌晨五点，燃尽了🚬。前五天基本把主体内容都写完了，第六天主要就根据Gradescope的错误提示专心debug，又de了一整个下午和一个晚上（早上十二点起的）， 大概在半夜一点多修复了merge函数的最后一个bug(竟然是两行代码写反的缘故)，修改了码风提交，算是堂堂完结了。</p>
-<p>之后兴奋得睡不着觉，索性直接出门去跑步了，乡镇半夜还是挺难绷的，乡道上有狗，不敢忘深了跑，省道上都是大车尾气，越吸越难受。本来打算差不多五公里就好，结果两公里之后就歇逼回家睡觉了。</p>
-<p>项目过程中借助了不少ai的帮忙，设计文档我死活整不出来，还是ai帮我跑的一篇，定义了最基本的一些类和相关函数，给项目启动带来了很大帮助。还有一些对我来说逻辑相当复杂的函数，比如checkout,merge等，也无奈借助了ai提供的代码，抄了很多上去（给gpt磕头了）。所以这次项目也算不上是完全由我自己完成，后续有时间一定会完全靠自己再重写一遍。💪💪</p>
-<p>暑假之后的打算是学mit 6.s081操作系统，如果还有时间的话该看看了java相关的了，要不然找不着工作该毁了。</p>
-<p>第一次在空间里写这么长，感谢能看到最后，共勉😋😋。</p>
-<h1 id="顺带学习的一些java语法（来源gpt）"><a href="#顺带学习的一些java语法（来源gpt）" class="headerlink" title="顺带学习的一些java语法（来源gpt）"></a>顺带学习的一些java语法（来源gpt）</h1><h2 id="java中对集合对象的封装方法"><a href="#java中对集合对象的封装方法" class="headerlink" title="java中对集合对象的封装方法"></a>java中对集合对象的封装方法</h2><h3 id="🔹-Collections-emptyList-是什么？"><a href="#🔹-Collections-emptyList-是什么？" class="headerlink" title="🔹 Collections.emptyList() 是什么？"></a>🔹 <code>Collections.emptyList()</code> 是什么？</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">this</span>.parents = Collections.emptyList();</span><br></pre></td></tr></table></figure>
-
-<p>这是 Java 提供的一个<strong>返回空且不可变的 List</strong> 的方法。它的优点：</p>
-<ul>
-<li>✅ <strong>节省内存</strong>（只用一个共享对象）</li>
-<li>✅ <strong>不可修改</strong>（你不能 add&#x2F;remove）</li>
-</ul>
-<p>相当于：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; parents = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"><span class="comment">// 不再允许修改 parents</span></span><br><span class="line">parents = Collections.unmodifiableList(parents);</span><br></pre></td></tr></table></figure>
-
-<p>但 <code>Collections.emptyList()</code> 更简单直接，适合用在像初始提交这种「确定没有 parent」的场景。</p>
-<hr>
-<h3 id="🔹-Collections-unmodifiableList-是什么？"><a href="#🔹-Collections-unmodifiableList-是什么？" class="headerlink" title="🔹 Collections.unmodifiableList(...) 是什么？"></a>🔹 <code>Collections.unmodifiableList(...)</code> 是什么？</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> Collections.unmodifiableList(parents);</span><br></pre></td></tr></table></figure>
-
-<p>这个是 Java 提供的<strong>只读包装器</strong>，对外只读，但内部仍可修改。</p>
-<h4 id="✅-举个例子："><a href="#✅-举个例子：" class="headerlink" title="✅ 举个例子："></a>✅ 举个例子：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">list.add(<span class="string">&quot;a&quot;</span>);</span><br><span class="line"></span><br><span class="line">List&lt;String&gt; readOnly = Collections.unmodifiableList(list);</span><br><span class="line">readOnly.add(<span class="string">&quot;b&quot;</span>); <span class="comment">// ❌ 会抛出 UnsupportedOperationException</span></span><br></pre></td></tr></table></figure>
-
-<p>但如果你内部修改了原始 <code>list</code>，<code>readOnly</code> 也会跟着变：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">list.add(<span class="string">&quot;b&quot;</span>);</span><br><span class="line">System.out.println(readOnly); <span class="comment">// ✅ 会打印 [&quot;a&quot;, &quot;b&quot;]</span></span><br></pre></td></tr></table></figure>
-
-<p>所以这个方法的主要目的就是：</p>
-<blockquote>
-<p>🔒 <strong>保护内部状态不被外部代码修改</strong></p>
-</blockquote>
-<hr>
-<h2 id="java中函数式编程的一些语法"><a href="#java中函数式编程的一些语法" class="headerlink" title="java中函数式编程的一些语法"></a>java中函数式编程的一些语法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">staging.getAdded().forEach(newSnapshot::put);</span><br><span class="line">staging.getRemoved().forEach(newSnapshot::remove);</span><br></pre></td></tr></table></figure>
-
-<p>实际上是使用了 Java 8 的函数式编程语法，分别执行了以下操作：</p>
-<hr>
-<h4 id="第一句："><a href="#第一句：" class="headerlink" title="第一句："></a>第一句：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">staging.getAdded().forEach(newSnapshot::put);</span><br></pre></td></tr></table></figure>
-
-<p>等价于：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (Map.Entry&lt;String, String&gt; entry : staging.getAdded().entrySet()) &#123;</span><br><span class="line">    newSnapshot.put(entry.getKey(), entry.getValue());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>作用：</strong><br>把暂存区中所有“新增或更新”的文件（文件名 -&gt; blobID）复制到新的提交快照 <code>newSnapshot</code> 中。</p>
-<hr>
-<h4 id="第二句："><a href="#第二句：" class="headerlink" title="第二句："></a>第二句：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">staging.getRemoved().forEach(newSnapshot::remove);</span><br></pre></td></tr></table></figure>
-
-<p>等价于：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (String path : staging.getRemoved()) &#123;</span><br><span class="line">    newSnapshot.remove(path);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>作用：</strong><br>把暂存区中标记为“要删除”的文件名从 <code>newSnapshot</code> 中移除。</p>
-<hr>
-<h4 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h4><p>这两句的目的是基于父提交的快照：</p>
-<ul>
-<li>把暂存区里新增&#x2F;修改的文件 <strong>添加到新快照</strong>；</li>
-<li>把暂存区里删除的文件 <strong>从快照中移除</strong>；</li>
-</ul>
-<p>最终 <code>newSnapshot</code> 就代表了本次提交时所有文件的最新状态。</p>
-<hr>
-<h4 id="1-代码更简洁，可读性更强"><a href="#1-代码更简洁，可读性更强" class="headerlink" title="1. 代码更简洁，可读性更强"></a>1. <strong>代码更简洁，可读性更强</strong></h4><ul>
-<li><code>untracked.sort(String::compareTo)</code> 直接调用列表的实例方法 <code>sort</code>，相比 <code>Collections.sort(untracked)</code> 更直观——排序的是 <code>untracked</code> 这个列表本身，语义更清晰。</li>
-<li><code>untracked.forEach(System.out::println)</code> 使用函数式编程的方法引用，替代了传统的 <code>for</code> 循环，减少了模板代码（如循环变量声明、迭代逻辑），让代码更专注于“要做什么”（打印每个元素），而不是“怎么做”（循环遍历）。</li>
-</ul>
-<h4 id="2-符合面向对象和函数式编程思想"><a href="#2-符合面向对象和函数式编程思想" class="headerlink" title="2. 符合面向对象和函数式编程思想"></a>2. <strong>符合面向对象和函数式编程思想</strong></h4><ul>
-<li><code>List.sort()</code> 是Java 8为 <code>List</code> 接口新增的默认方法，属于“对象自己管理自己的行为”，更符合面向对象设计（将排序逻辑封装在列表自身）。</li>
-<li>函数式编程风格（<code>forEach</code> + 方法引用）是Java 8及以后推荐的集合操作方式，尤其适合简单的遍历场景，代码更紧凑。</li>
-</ul>
-<h4 id="3-工程上的一致性"><a href="#3-工程上的一致性" class="headerlink" title="3. 工程上的一致性"></a>3. <strong>工程上的一致性</strong></h4><ul>
-<li>在现代Java项目中，更倾向于使用 <code>List.sort()</code> 替代 <code>Collections.sort()</code>，使用 <code>forEach</code> 替代传统 <code>for</code> 循环（简单场景下），以保持代码风格的统一。</li>
-<li>减少显式循环变量（如 <code>for (String f : untracked)</code> 中的 <code>f</code>），可以降低变量命名冲突或误用的风险。</li>
-</ul>
-<h4 id="注意：兼容性"><a href="#注意：兼容性" class="headerlink" title="注意：兼容性"></a>注意：兼容性</h4><p>两种写法的功能完全一致（排序逻辑和打印结果相同）。<code>List.sort()</code> 和 <code>forEach</code> 是Java 8引入的特性，若项目需要兼容Java 7及以下版本，则需保留原写法。但目前绝大多数工程已使用Java 8+，因此这种修改是更优的选择。</p>
-<p>总结：这种修改不影响功能，却让代码更简洁、符合现代Java风格，在工程实践中更推荐。</p>
 
     </div>
 
@@ -891,13 +820,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">5k</span>
+    <span title="站点总字数">3k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">17 分钟</span>
+    <span title="站点阅读时长">12 分钟</span>
   </span>
 </div>
 
