@@ -1,27 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>git push 在全局代理下有时失效的原因</title>
-    <url>/posts/f256e65a/</url>
-    <content><![CDATA[<h2 id="报错"><a href="#报错" class="headerlink" title="报错"></a>报错</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fatal: unable to access <span class="string">&#x27;https://github.com/...&#x27;</span>: Recv failure: Connection was reset</span><br></pre></td></tr></table></figure>
-
-<h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><p>假设代理监听在127.0.0.1:7897 ,在终端直接运行</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global http.proxy  http://127.0.0.1:7897</span><br><span class="line">git config --global https.proxy http://127.0.0.1:7897</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>即可解决。</p>
-<hr>
-<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><ul>
-<li>原来的情况: 浏览器什么的走的是系统代理，也是就是clah开的全局代理，但是git没走代理，直接裸连的github，被国内网络 reset</li>
-<li>现在的情况: 更改了全局git配置文件，所有仓库都统一用这个代理。<ul>
-<li>数据流变成：<br>git -&gt; 本地代理端口 —&gt; clash接管请求，转发到github -&gt; 返回的结果再原路返回到git</li>
-</ul>
-</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>疑难杂症</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>CS61B | gitlet</title>
     <url>/posts/d8e1a81/</url>
     <content><![CDATA[<h1 id="核心类"><a href="#核心类" class="headerlink" title="核心类"></a>核心类</h1><h2 id="Commit-java"><a href="#Commit-java" class="headerlink" title="Commit.java"></a>Commit.java</h2><ul>
@@ -506,6 +485,187 @@
       </categories>
       <tags>
         <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MaiBot全流程配置与工作原理</title>
+    <url>/posts/9eadff91/</url>
+    <content><![CDATA[<h1 id="一-概述"><a href="#一-概述" class="headerlink" title="一 .  概述"></a>一 .  概述</h1><p>MaiBot 是一个高度整合的 AI 机器人系统，它本体负责：</p>
+<ul>
+<li>LLM 回复</li>
+<li>人格设定</li>
+<li>记忆系统</li>
+<li>插件机制</li>
+</ul>
+<p>但它 <strong>不能直接连接 QQ</strong>。<br> 所以需要 Napcat 来作为 QQ 的协议层（负责登录 QQ、接收 QQ 消息、发消息）。<br> Napcat 不能直接连 MaiBot，于是有 <strong>Adapter（适配器）</strong> 充当桥接角色。</p>
+<hr>
+<h1 id="二-系统架构-核心组件之间的关系"><a href="#二-系统架构-核心组件之间的关系" class="headerlink" title="二 . 系统架构 (核心组件之间的关系)"></a>二 . 系统架构 (核心组件之间的关系)</h1><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">NapcatQQ（连接 QQ）</span><br><span class="line">   ↓ WebSocket 推送事件</span><br><span class="line">MaiBot-Napcat-Adapter（做协议翻译）</span><br><span class="line">   ↓ WebSocket 内部通信</span><br><span class="line">MaiBot（机器人本体）</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>各自负责</strong> :</p>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>NapcatQQ</td>
+<td>负责登录QQ, 接收QQ消息,发消息</td>
+</tr>
+<tr>
+<td>Adapter</td>
+<td>Napcat格式 &lt;—-&gt; MaiBot格式之间的转换桥梁</td>
+</tr>
+<tr>
+<td>MaiBot</td>
+<td>负责人格, 模型, 记忆, 插件, 最终回复</td>
+</tr>
+</tbody></table>
+<h1 id="三-整体通信链路"><a href="#三-整体通信链路" class="headerlink" title="三 . 整体通信链路"></a>三 . 整体通信链路</h1><h2 id="完整链路如下"><a href="#完整链路如下" class="headerlink" title="完整链路如下:"></a>完整链路如下:</h2><ol>
+<li>QQ接收消息</li>
+<li>NapcatQQ监听qq, 收到事件</li>
+<li>NapcatQQ将事件通过反向WebSocket (ws)推给Adapter(端口8095)</li>
+<li>Adapter解析事件,转发给MaiBot(端口8000)</li>
+<li>MaiBot调用模型生成回复</li>
+<li>MaiBot通过ws返回消息给Adapter</li>
+<li>Adapter通过NapcatQQ发回给QQ</li>
+</ol>
+<h2 id="关键端口说明"><a href="#关键端口说明" class="headerlink" title="关键端口说明:"></a>关键端口说明:</h2><table>
+<thead>
+<tr>
+<th>端口</th>
+<th>组件</th>
+<th>用途</th>
+<th>是否对外网开放</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>8000</td>
+<td>MaiBot</td>
+<td>MaiBot的WebSocket服务器,专门用来给Adapter连接用</td>
+<td>no</td>
+</tr>
+<tr>
+<td>8001</td>
+<td>MaiBot WebUI</td>
+<td>MaiBot的配置界面</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>8095</td>
+<td>Adapter</td>
+<td>Napcat反向WS的输入口</td>
+<td>no</td>
+</tr>
+<tr>
+<td>6099</td>
+<td>Napcat WebUI</td>
+<td>Napcat的配置界面</td>
+<td>yes</td>
+</tr>
+</tbody></table>
+<h1 id="四-一键部署教程-linux"><a href="#四-一键部署教程-linux" class="headerlink" title="四 . 一键部署教程(linux)"></a>四 . 一键部署教程(linux)</h1><h2 id="1-MaiBot-Napcat-Adapter"><a href="#1-MaiBot-Napcat-Adapter" class="headerlink" title="1. MaiBot + Napcat-Adapter"></a>1. MaiBot + Napcat-Adapter</h2><p><strong>参考官方文档</strong> :</p>
+<p>[MaiBot Linux一键脚本部署](<a href="https://docs.mai-mai.org/manual/deployment/community/linux_one_key.html">MaiBot Linux 一键脚本部署 | MaiBot 文档中心 (mai-mai.org)</a>)</p>
+<p><strong>关键脚本</strong>: </p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget -O maibot-install.sh https://raw.githubusercontent.com/Astriora/Antlia/refs/heads/main/Script/MaiBot/MaiBot-install.sh &amp;&amp;</span><br><span class="line">bash maibot-install.sh</span><br></pre></td></tr></table></figure>
+
+<p><strong>说明</strong>:一键部署之后推荐再看一下linux手动部署的步骤,以便知道这个一键部署都干了什么事</p>
+<p>这个脚本主要做了:</p>
+<ol>
+<li>拉取MaiBot主程序和Adapter主程序</li>
+<li>创建虚拟环境</li>
+<li>安装依赖</li>
+<li>创建sreen运行对话(挂在后台不断线运行)</li>
+<li>生成Web UI(8001)</li>
+<li>生成.env&#x2F;配置文件</li>
+<li>提示使用maibot命令进行控制</li>
+</ol>
+<p>这个一键脚本不仅部署了MaiBot,还顺便部署了Adapter和screen会话</p>
+<h2 id="2-Napcat"><a href="#2-Napcat" class="headerlink" title="2. Napcat"></a>2. Napcat</h2><ul>
+<li>[Napcat的shell安装方式](<a href="https://napneko.github.io/guide/boot/Shell">Shell | NapCatQQ (napneko.github.io)</a>)</li>
+</ul>
+<p>选择 <strong>NapCat.Installer - Linux 一键使用脚本</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl -o \</span><br><span class="line">napcat.sh \</span><br><span class="line">https://nclatest.znin.net/NapNeko/NapCat-Installer/main/script/install.sh \</span><br><span class="line">&amp;&amp; bash napcat.sh</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>下载完成之后输入命令</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">napcat</span><br></pre></td></tr></table></figure>
+
+<p>按照提示输入qq号并且扫码登录</p>
+<p>两种配置Websocket客户端方法任选其一</p>
+<h3 id="使用终端交互配置界面"><a href="#使用终端交互配置界面" class="headerlink" title="使用终端交互配置界面"></a>使用终端交互配置界面</h3><p>打开选项4</p>
+<img src="/posts/9eadff91/image-20251125192202747.png" class="" title="image-20251125192202747">
+
+
+
+<p>名称任意,token任意(注意13位以上) , url填写ws:&#x2F;&#x2F;localhost:8095(Adapter的默认端口),保存即可.</p>
+<h3 id="使用WebUI-配置"><a href="#使用WebUI-配置" class="headerlink" title="使用WebUI 配置"></a>使用WebUI 配置</h3><p>启用Web UI配置,默认端口6099, 在浏览器直接打开即可,在[<strong>网络配置</strong>] 里面[<strong>新建</strong>] [<strong>Websocket客户端</strong>] </p>
+<img src="/posts/9eadff91/image-20251125192724144.png" class="" title="image-20251125192724144">
+
+<p>信息填写与终端交互配置界面一致</p>
+<ul>
+<li>保存之后启动napcat服务</li>
+</ul>
+<h2 id="3-配置Adapter"><a href="#3-配置Adapter" class="headerlink" title="3. 配置Adapter"></a>3. 配置Adapter</h2><p>路径</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">~/MaiBot-Napcat-Adapter/config.toml</span><br></pre></td></tr></table></figure>
+
+<p>关键部分:</p>
+<ul>
+<li>确认一下端口是不是8095</li>
+<li>设置一下黑白名单, 简单方法,把初始设置的whitelist改成blacklist, group_list和private_list都留空,方便前期测试,后续根据个人需求更改,配置完保存退出</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[chat] <span class="comment"># 黑白名单功能</span></span><br><span class="line">group_list_type = <span class="string">&quot;blacklist&quot;</span> <span class="comment"># 群组名单类型，可选为：whitelist, blacklist</span></span><br><span class="line">group_list = []               <span class="comment"># 群组名单</span></span><br><span class="line"><span class="comment"># 当group_list_type为whitelist时，只有群组名单中的群组可以聊天</span></span><br><span class="line"><span class="comment"># 当group_list_type为blacklist时，群组名单中的任何群组无法聊天</span></span><br><span class="line">private_list_type = <span class="string">&quot;blacklist&quot;</span> <span class="comment"># 私聊名单类型，可选为：whitelist, blacklist</span></span><br><span class="line">private_list = []               <span class="comment"># 私聊名单</span></span><br><span class="line"><span class="comment"># 当private_list_type为whitelist时，只有私聊名单中的用户可以聊天</span></span><br><span class="line"><span class="comment"># 当private_list_type为blacklist时，私聊名单中的任何用户无法聊天</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="4-启动服务"><a href="#4-启动服务" class="headerlink" title="4 . 启动服务"></a>4 . 启动服务</h2><p>输入</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">maibot</span><br></pre></td></tr></table></figure>
+
+
+
+<p>弹出菜单</p>
+<img src="/posts/9eadff91/image-20251125193506578.png" class="" title="image-20251125193506578">
+
+<p>按1 启动所有服务(后台启动)</p>
+<p><strong>说明</strong> : 5, 6 分别是MaiBot 和Adapter的日志, 打开日志之后想关掉不要直接按ctrl + c,会直接停掉服务,按<code>ctrl + A   D </code> 即可</p>
+<h2 id="5-配置api-key"><a href="#5-配置api-key" class="headerlink" title="5. 配置api-key"></a>5. 配置api-key</h2><p>注册一个硅基流动 , 可以使用别人的邀请码,这样双方都能免费得到14块钱的token,(本人邀请码是WwUwVurs, 填填我的把,欧内该😢😢), 把创建好的api密钥保存下来</p>
+<p>访问8001端口打开Maibot Web UI </p>
+<p> 在[麦麦模型提供商配置]中填入刚刚的api-key (注意选择硅基流动)</p>
+<img src="/posts/9eadff91/image-20251125194112626.png" class="" title="image-20251125194112626">
+
+
+<p>重启麦麦一下就可以正式开始使用了, 在qq里面给bot发消息,再看看日志正不正常😋😋</p>
+<h1 id="五-总结"><a href="#五-总结" class="headerlink" title="五. 总结"></a>五. 总结</h1><ul>
+<li>本人一开始部署的时候不清楚项目架构, 不知道napcat需要独立安装, 以为napcat-adapter就能直接连接qq,卡了很长时间, 🍬得要死.</li>
+<li>总体不是很复杂,感谢看到这里.</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>qqbot</tag>
+        <tag>配置</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>git push 在全局代理下有时失效的原因</title>
+    <url>/posts/f256e65a/</url>
+    <content><![CDATA[<h2 id="报错"><a href="#报错" class="headerlink" title="报错"></a>报错</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fatal: unable to access <span class="string">&#x27;https://github.com/...&#x27;</span>: Recv failure: Connection was reset</span><br></pre></td></tr></table></figure>
+
+<h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><p>假设代理监听在127.0.0.1:7897 ,在终端直接运行</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global http.proxy  http://127.0.0.1:7897</span><br><span class="line">git config --global https.proxy http://127.0.0.1:7897</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>即可解决。</p>
+<hr>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><ul>
+<li>原来的情况: 浏览器什么的走的是系统代理，也是就是clah开的全局代理，但是git没走代理，直接裸连的github，被国内网络 reset</li>
+<li>现在的情况: 更改了全局git配置文件，所有仓库都统一用这个代理。<ul>
+<li>数据流变成：<br>git -&gt; 本地代理端口 —&gt; clash接管请求，转发到github -&gt; 返回的结果再原路返回到git</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>疑难杂症</tag>
       </tags>
   </entry>
   <entry>

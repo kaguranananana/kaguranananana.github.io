@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/b_19cb62d36042186e6c7c4695e459bd06_32x32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/b_19cb62d36042186e6c7c4695e459bd06_16x16.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"kaguranananana.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="MaiBot,一个多模型，拟人化，可拓展的智能体">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MaiBot全流程配置与工作原理">
+<meta property="og:url" content="https://kaguranananana.github.io/posts/9eadff91/index.html">
+<meta property="og:site_name" content="anontokyo">
+<meta property="og:description" content="MaiBot,一个多模型，拟人化，可拓展的智能体">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kaguranananana.github.io/posts/9eadff91/image-20251125192202747.png">
+<meta property="og:image" content="https://kaguranananana.github.io/posts/9eadff91/image-20251125192724144.png">
+<meta property="og:image" content="https://kaguranananana.github.io/posts/9eadff91/image-20251125193506578.png">
+<meta property="og:image" content="https://kaguranananana.github.io/posts/9eadff91/image-20251125194112626.png">
+<meta property="article:published_time" content="2025-11-25T09:09:27.000Z">
+<meta property="article:modified_time" content="2025-11-25T12:52:06.870Z">
+<meta property="article:tag" content="qqbot">
+<meta property="article:tag" content="配置">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://kaguranananana.github.io/posts/9eadff91/image-20251125192202747.png">
+
+
+<link rel="canonical" href="https://kaguranananana.github.io/posts/9eadff91/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://kaguranananana.github.io/posts/9eadff91/","path":"posts/9eadff91/","title":"MaiBot全流程配置与工作原理"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>MaiBot全流程配置与工作原理 | anontokyo</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+  <script src="/js/third-party/addtoany.js" defer></script>
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">anontokyo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-友链"><a href="/links/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80-%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">一 .  概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C-%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84-%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">2.</span> <span class="nav-text">二 . 系统架构 (核心组件之间的关系)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89-%E6%95%B4%E4%BD%93%E9%80%9A%E4%BF%A1%E9%93%BE%E8%B7%AF"><span class="nav-number">3.</span> <span class="nav-text">三 . 整体通信链路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4%E9%93%BE%E8%B7%AF%E5%A6%82%E4%B8%8B"><span class="nav-number">3.1.</span> <span class="nav-text">完整链路如下:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E7%AB%AF%E5%8F%A3%E8%AF%B4%E6%98%8E"><span class="nav-number">3.2.</span> <span class="nav-text">关键端口说明:</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B-%E4%B8%80%E9%94%AE%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B-linux"><span class="nav-number">4.</span> <span class="nav-text">四 . 一键部署教程(linux)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-MaiBot-Napcat-Adapter"><span class="nav-number">4.1.</span> <span class="nav-text">1. MaiBot + Napcat-Adapter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Napcat"><span class="nav-number">4.2.</span> <span class="nav-text">2. Napcat</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%BB%88%E7%AB%AF%E4%BA%A4%E4%BA%92%E9%85%8D%E7%BD%AE%E7%95%8C%E9%9D%A2"><span class="nav-number">4.2.1.</span> <span class="nav-text">使用终端交互配置界面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8WebUI-%E9%85%8D%E7%BD%AE"><span class="nav-number">4.2.2.</span> <span class="nav-text">使用WebUI 配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E9%85%8D%E7%BD%AEAdapter"><span class="nav-number">4.3.</span> <span class="nav-text">3. 配置Adapter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1"><span class="nav-number">4.4.</span> <span class="nav-text">4 . 启动服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E9%85%8D%E7%BD%AEapi-key"><span class="nav-number">4.5.</span> <span class="nav-text">5. 配置api-key</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%94-%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">五. 总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="/images/b_19cb62d36042186e6c7c4695e459bd06.jpg">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description">anontokyo</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/kaguranananana" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;kaguranananana" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:a2813288477@outlook.com" title="E-Mail → mailto:a2813288477@outlook.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/379201555" title="Bilibili → https:&#x2F;&#x2F;space.bilibili.com&#x2F;379201555" rel="noopener me" target="_blank"><i class="fab fa-bilibili fa-fw"></i>Bilibili</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://music.163.com/#/user/home?id=429108030" title="CloudMusic → https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;user&#x2F;home?id&#x3D;429108030" rel="noopener me" target="_blank"><i class="fa fa-music fa-fw"></i>CloudMusic</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://kaguranananana.github.io/posts/9eadff91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/b_19cb62d36042186e6c7c4695e459bd06.jpg">
+      <meta itemprop="name" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="anontokyo">
+      <meta itemprop="description" content="anontokyo">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="MaiBot全流程配置与工作原理 | anontokyo">
+      <meta itemprop="description" content="MaiBot,一个多模型，拟人化，可拓展的智能体">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MaiBot全流程配置与工作原理
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-11-25 17:09:27 / 修改时间：20:52:06" itemprop="dateCreated datePublished" datetime="2025-11-25T17:09:27+08:00">2025-11-25</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">MaiBot,一个多模型，拟人化，可拓展的智能体</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="一-概述"><a href="#一-概述" class="headerlink" title="一 .  概述"></a>一 .  概述</h1><p>MaiBot 是一个高度整合的 AI 机器人系统，它本体负责：</p>
+<ul>
+<li>LLM 回复</li>
+<li>人格设定</li>
+<li>记忆系统</li>
+<li>插件机制</li>
+</ul>
+<p>但它 <strong>不能直接连接 QQ</strong>。<br> 所以需要 Napcat 来作为 QQ 的协议层（负责登录 QQ、接收 QQ 消息、发消息）。<br> Napcat 不能直接连 MaiBot，于是有 <strong>Adapter（适配器）</strong> 充当桥接角色。</p>
+<hr>
+<h1 id="二-系统架构-核心组件之间的关系"><a href="#二-系统架构-核心组件之间的关系" class="headerlink" title="二 . 系统架构 (核心组件之间的关系)"></a>二 . 系统架构 (核心组件之间的关系)</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">NapcatQQ（连接 QQ）</span><br><span class="line">   ↓ WebSocket 推送事件</span><br><span class="line">MaiBot-Napcat-Adapter（做协议翻译）</span><br><span class="line">   ↓ WebSocket 内部通信</span><br><span class="line">MaiBot（机器人本体）</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>各自负责</strong> :</p>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>NapcatQQ</td>
+<td>负责登录QQ, 接收QQ消息,发消息</td>
+</tr>
+<tr>
+<td>Adapter</td>
+<td>Napcat格式 &lt;—-&gt; MaiBot格式之间的转换桥梁</td>
+</tr>
+<tr>
+<td>MaiBot</td>
+<td>负责人格, 模型, 记忆, 插件, 最终回复</td>
+</tr>
+</tbody></table>
+<h1 id="三-整体通信链路"><a href="#三-整体通信链路" class="headerlink" title="三 . 整体通信链路"></a>三 . 整体通信链路</h1><h2 id="完整链路如下"><a href="#完整链路如下" class="headerlink" title="完整链路如下:"></a>完整链路如下:</h2><ol>
+<li>QQ接收消息</li>
+<li>NapcatQQ监听qq, 收到事件</li>
+<li>NapcatQQ将事件通过反向WebSocket (ws)推给Adapter(端口8095)</li>
+<li>Adapter解析事件,转发给MaiBot(端口8000)</li>
+<li>MaiBot调用模型生成回复</li>
+<li>MaiBot通过ws返回消息给Adapter</li>
+<li>Adapter通过NapcatQQ发回给QQ</li>
+</ol>
+<h2 id="关键端口说明"><a href="#关键端口说明" class="headerlink" title="关键端口说明:"></a>关键端口说明:</h2><table>
+<thead>
+<tr>
+<th>端口</th>
+<th>组件</th>
+<th>用途</th>
+<th>是否对外网开放</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>8000</td>
+<td>MaiBot</td>
+<td>MaiBot的WebSocket服务器,专门用来给Adapter连接用</td>
+<td>no</td>
+</tr>
+<tr>
+<td>8001</td>
+<td>MaiBot WebUI</td>
+<td>MaiBot的配置界面</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>8095</td>
+<td>Adapter</td>
+<td>Napcat反向WS的输入口</td>
+<td>no</td>
+</tr>
+<tr>
+<td>6099</td>
+<td>Napcat WebUI</td>
+<td>Napcat的配置界面</td>
+<td>yes</td>
+</tr>
+</tbody></table>
+<h1 id="四-一键部署教程-linux"><a href="#四-一键部署教程-linux" class="headerlink" title="四 . 一键部署教程(linux)"></a>四 . 一键部署教程(linux)</h1><h2 id="1-MaiBot-Napcat-Adapter"><a href="#1-MaiBot-Napcat-Adapter" class="headerlink" title="1. MaiBot + Napcat-Adapter"></a>1. MaiBot + Napcat-Adapter</h2><p><strong>参考官方文档</strong> :</p>
+<p>[MaiBot Linux一键脚本部署](<a target="_blank" rel="noopener" href="https://docs.mai-mai.org/manual/deployment/community/linux_one_key.html">MaiBot Linux 一键脚本部署 | MaiBot 文档中心 (mai-mai.org)</a>)</p>
+<p><strong>关键脚本</strong>: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget -O maibot-install.sh https://raw.githubusercontent.com/Astriora/Antlia/refs/heads/main/Script/MaiBot/MaiBot-install.sh &amp;&amp;</span><br><span class="line">bash maibot-install.sh</span><br></pre></td></tr></table></figure>
+
+<p><strong>说明</strong>:一键部署之后推荐再看一下linux手动部署的步骤,以便知道这个一键部署都干了什么事</p>
+<p>这个脚本主要做了:</p>
+<ol>
+<li>拉取MaiBot主程序和Adapter主程序</li>
+<li>创建虚拟环境</li>
+<li>安装依赖</li>
+<li>创建sreen运行对话(挂在后台不断线运行)</li>
+<li>生成Web UI(8001)</li>
+<li>生成.env&#x2F;配置文件</li>
+<li>提示使用maibot命令进行控制</li>
+</ol>
+<p>这个一键脚本不仅部署了MaiBot,还顺便部署了Adapter和screen会话</p>
+<h2 id="2-Napcat"><a href="#2-Napcat" class="headerlink" title="2. Napcat"></a>2. Napcat</h2><ul>
+<li>[Napcat的shell安装方式](<a target="_blank" rel="noopener" href="https://napneko.github.io/guide/boot/Shell">Shell | NapCatQQ (napneko.github.io)</a>)</li>
+</ul>
+<p>选择 <strong>NapCat.Installer - Linux 一键使用脚本</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">curl -o \</span><br><span class="line">napcat.sh \</span><br><span class="line">https://nclatest.znin.net/NapNeko/NapCat-Installer/main/script/install.sh \</span><br><span class="line">&amp;&amp; bash napcat.sh</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>下载完成之后输入命令</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">napcat</span><br></pre></td></tr></table></figure>
+
+<p>按照提示输入qq号并且扫码登录</p>
+<p>两种配置Websocket客户端方法任选其一</p>
+<h3 id="使用终端交互配置界面"><a href="#使用终端交互配置界面" class="headerlink" title="使用终端交互配置界面"></a>使用终端交互配置界面</h3><p>打开选项4</p>
+<img src="/posts/9eadff91/image-20251125192202747.png" class="" title="image-20251125192202747">
+
+
+
+<p>名称任意,token任意(注意13位以上) , url填写ws:&#x2F;&#x2F;localhost:8095(Adapter的默认端口),保存即可.</p>
+<h3 id="使用WebUI-配置"><a href="#使用WebUI-配置" class="headerlink" title="使用WebUI 配置"></a>使用WebUI 配置</h3><p>启用Web UI配置,默认端口6099, 在浏览器直接打开即可,在[<strong>网络配置</strong>] 里面[<strong>新建</strong>] [<strong>Websocket客户端</strong>] </p>
+<img src="/posts/9eadff91/image-20251125192724144.png" class="" title="image-20251125192724144">
+
+<p>信息填写与终端交互配置界面一致</p>
+<ul>
+<li>保存之后启动napcat服务</li>
+</ul>
+<h2 id="3-配置Adapter"><a href="#3-配置Adapter" class="headerlink" title="3. 配置Adapter"></a>3. 配置Adapter</h2><p>路径</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MaiBot-Napcat-Adapter/config.toml</span><br></pre></td></tr></table></figure>
+
+<p>关键部分:</p>
+<ul>
+<li>确认一下端口是不是8095</li>
+<li>设置一下黑白名单, 简单方法,把初始设置的whitelist改成blacklist, group_list和private_list都留空,方便前期测试,后续根据个人需求更改,配置完保存退出</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[chat] <span class="comment"># 黑白名单功能</span></span><br><span class="line">group_list_type = <span class="string">&quot;blacklist&quot;</span> <span class="comment"># 群组名单类型，可选为：whitelist, blacklist</span></span><br><span class="line">group_list = []               <span class="comment"># 群组名单</span></span><br><span class="line"><span class="comment"># 当group_list_type为whitelist时，只有群组名单中的群组可以聊天</span></span><br><span class="line"><span class="comment"># 当group_list_type为blacklist时，群组名单中的任何群组无法聊天</span></span><br><span class="line">private_list_type = <span class="string">&quot;blacklist&quot;</span> <span class="comment"># 私聊名单类型，可选为：whitelist, blacklist</span></span><br><span class="line">private_list = []               <span class="comment"># 私聊名单</span></span><br><span class="line"><span class="comment"># 当private_list_type为whitelist时，只有私聊名单中的用户可以聊天</span></span><br><span class="line"><span class="comment"># 当private_list_type为blacklist时，私聊名单中的任何用户无法聊天</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="4-启动服务"><a href="#4-启动服务" class="headerlink" title="4 . 启动服务"></a>4 . 启动服务</h2><p>输入</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">maibot</span><br></pre></td></tr></table></figure>
+
+
+
+<p>弹出菜单</p>
+<img src="/posts/9eadff91/image-20251125193506578.png" class="" title="image-20251125193506578">
+
+<p>按1 启动所有服务(后台启动)</p>
+<p><strong>说明</strong> : 5, 6 分别是MaiBot 和Adapter的日志, 打开日志之后想关掉不要直接按ctrl + c,会直接停掉服务,按<code>ctrl + A   D </code> 即可</p>
+<h2 id="5-配置api-key"><a href="#5-配置api-key" class="headerlink" title="5. 配置api-key"></a>5. 配置api-key</h2><p>注册一个硅基流动 , 可以使用别人的邀请码,这样双方都能免费得到14块钱的token,(本人邀请码是WwUwVurs, 填填我的把,欧内该😢😢), 把创建好的api密钥保存下来</p>
+<p>访问8001端口打开Maibot Web UI </p>
+<p> 在[麦麦模型提供商配置]中填入刚刚的api-key (注意选择硅基流动)</p>
+<img src="/posts/9eadff91/image-20251125194112626.png" class="" title="image-20251125194112626">
+
+
+<p>重启麦麦一下就可以正式开始使用了, 在qq里面给bot发消息,再看看日志正不正常😋😋</p>
+<h1 id="五-总结"><a href="#五-总结" class="headerlink" title="五. 总结"></a>五. 总结</h1><ul>
+<li>本人一开始部署的时候不清楚项目架构, 不知道napcat需要独立安装, 以为napcat-adapter就能直接连接qq,卡了很长时间, 🍬得要死.</li>
+<li>总体不是很复杂,感谢看到这里.</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/qqbot/" rel="tag"># qqbot</a>
+              <a href="/tags/%E9%85%8D%E7%BD%AE/" rel="tag"># 配置</a>
+          </div>
+
+        
+  <div class="social-like a2a_kit a2a_kit_size_32 a2a_default_style">
+    <a class="a2a_dd" target="_blank" rel="noopener" href="https://www.addtoany.com/share"></a>
+      <a class="a2a_button_copy_link"></a>
+  </div>
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/f256e65a/" rel="prev" title="git push 在全局代理下有时失效的原因">
+                  <i class="fa fa-angle-left"></i> git push 在全局代理下有时失效的原因
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder"></span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">52k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:08</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/kaguranananana" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+  <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+  <script>
+    var options = {
+      bottom: '64px',
+      right: 'unset',
+      left: '32px',
+      time: '0.5s',
+      mixColor: '#fff',
+      backgroundColor: '#fff',
+      buttonColorDark: '#100f2c',
+      buttonColorLight: '#fff',
+      saveInCookies: true,
+      label: '🌓',
+      autoMatchOsTheme: true
+    };
+    const darkmode = new Darkmode(options);
+    darkmode.showWidget();
+  </script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script></body>
+</html>
